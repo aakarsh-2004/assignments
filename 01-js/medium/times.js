@@ -9,5 +9,16 @@ There is no automated test for this one, this is more for you to understand time
 */
 
 function calculateTime(n) {
-    return 0.01;
+    let sum = 0;
+    const currTime = Date.now();
+    console.log(currTime);
+    for(let i=0; i<n; i++){
+        sum+=i;
+    }
+    const afterTime = Date.now();
+    console.log(afterTime);
+    const res = (afterTime-currTime);
+    console.log(`Time it took to complete the loop was: ${res} milli seconds`);
 }
+
+calculateTime(100000000)

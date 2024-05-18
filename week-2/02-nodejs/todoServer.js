@@ -45,5 +45,82 @@
   const app = express();
   
   app.use(bodyParser.json());
-  
+
+  let todos = [];
+  let id = 1;
+
+  app.get('/todos', (req, res) => {
+    res.status(200).json(todos);
+  })
+
+  app.get('/todos/:id', (req, res) => {
+    const id = req.params.id;
+    let toDo;
+    todos.map((todo, index) => {
+      if(todo.id == id){
+        toDo=todo;
+      }
+    })
+
+    if(toDo){
+      res.status(200).json(toDo);
+    } else {
+      res.status(404).send('404 Not Found');
+    }
+  })
+
+
+  app.post('/todos', (req, res) => {
+    const { title, completed, description } = req.body;
+    const newToDo = {id, title, completed, description};
+
+    todos.push(newToDo);
+    
+    res.status(201).json({id: id});
+    id++;
+  });
+
+
+
+  app.put('/todos/:id', (req, res) => {
+    const { title, completed, description } = req.body;
+    const id = req.params.id;
+    let exists = false;
+    todos.forEach(todo => {
+      if(todo.id == id){
+        exists=true;
+        if(title){
+          todo.title=title;
+        }
+        if (completed){
+          todo.completed=completed;
+        }
+        if (description){
+          todo.description=description;
+        }
+      }
+    })
+    if(exists){
+      res.status(200).json('OK')
+    } else {
+      res.status(404).json('404 Not Found');
+    }
+  });
+
+
+  app.delete('/todos/:id', (req, res) => {
+    console.log('Delete Ran');
+    const id = req.params.id;
+    let found = false;
+    todos = todos.filter((todo, index) => {
+      if(todo.id == id){
+        found=true;
+      }
+      return todo.id != id;
+    })
+
+    return found ? res.status(200).json('OK') : res.status(404).json('404 Not Found');
+  })
+
+
   module.exports = app;
